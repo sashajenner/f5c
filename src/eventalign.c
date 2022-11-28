@@ -1853,26 +1853,6 @@ char *emit_event_alignment_tsv(uint32_t strand_idx,
 
         const event_alignment_t& ea = alignments[i];
 
-        // basic information
-        if (!print_read_names)
-        {
-            sprintf_append(sp, "%s\t%d\t%s\t%ld\t%c\t",
-                    ref_name, //ea.ref_name.c_str(),
-                    ea.ref_position,
-                    ea.ref_kmer,
-                    (long)read_index,
-                    't'); //"tc"[ea.strand_idx]);
-        }
-        else
-        {
-            sprintf_append(sp, "%s\t%d\t%s\t%s\t%c\t",
-                    ref_name, //ea.ref_name.c_str(),
-                    ea.ref_position,
-                    ea.ref_kmer,
-                    read_name, //sr.read_name.c_str(),
-                    't'); //"tc"[ea.strand_idx]);
-        }
-
         // event information
         float event_mean = (et->event)[ea.event_idx].mean;
         float event_stdv = (et->event)[ea.event_idx].stdv;
@@ -1958,6 +1938,26 @@ char *emit_event_alignment_tsv(uint32_t strand_idx,
                 model_mean = model1.level_mean;
                 model_stdv = model1.level_stdv;
             }
+        }
+
+        // basic information
+        if (!print_read_names)
+        {
+            sprintf_append(sp, "%s\t%d\t%s\t%ld\t%c\t",
+                    ref_name, //ea.ref_name.c_str(),
+                    ea.ref_position,
+                    ea.ref_kmer,
+                    (long)read_index,
+                    't'); //"tc"[ea.strand_idx]);
+        }
+        else
+        {
+            sprintf_append(sp, "%s\t%d\t%s\t%s\t%c\t",
+                    ref_name, //ea.ref_name.c_str(),
+                    ea.ref_position,
+                    ea.ref_kmer,
+                    read_name, //sr.read_name.c_str(),
+                    't'); //"tc"[ea.strand_idx]);
         }
 
         float standard_level = (event_mean - model_mean) / (sqrt(scalings.var) * model_stdv);
