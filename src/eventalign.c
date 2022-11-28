@@ -1883,17 +1883,29 @@ char *emit_event_alignment_tsv(uint32_t strand_idx,
 
         uint64_t start_idx = (et->event)[ea.event_idx].start; //inclusive
         uint64_t end_idx = (et->event)[ea.event_idx].start + (uint64_t)((et->event)[ea.event_idx].length); //non-inclusive
+        int is_inperfect = 0;
 
         if (collapse){
 
             n_collapse = 1;
+
+            if (ea.model_kmer[0] == 'N')
+                is_inperfect = 1;
+
             while (i + n_collapse < alignments.size() && ea.ref_position ==  alignments[i+n_collapse].ref_position){
                 assert(strcmp(ea.ref_kmer,alignments[i+n_collapse].ref_kmer)==0);
                 // if(strcmp(ea.model_kmer,alignments[i+n_collapse].model_kmer)!=0){ //TODO: NNNN kmers must be handled
                 //     fprintf(stderr, "model kmer does not match! %s vs %s\n",ea.model_kmer,alignments[i+n_collapse].model_kmer);
                 // }
+
+                if (alignments[i + n_collapse].model_kmer[0] == 'N')
+                    is_inperfect = 1;
+
                 n_collapse++;
             }
+
+            if (is_inperfect)
+                continue;
 
             if(n_collapse > 1){
                 uint64_t start_idx1 = start_idx;
